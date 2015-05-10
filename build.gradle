@@ -1,0 +1,37 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+repositories {
+    mavenCentral()
+
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile 'org.jetbrains.kotlin:kotlin-swing:0.11.91.4'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+buildscript {
+    ext.kotlin_version = '0.11.91.4'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
