@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.util.Arrays
 import java.util.Locale
 import javax.swing.*
 import kotlin.platform.platformStatic
@@ -28,6 +29,10 @@ class Demo() {
     val defaultDt = 0.01
     val defaultMaxT = 75.0
 
+    val solvers = mapOf(Pair("Explicit Euler solver", EulerExplicitSolver()),
+                        Pair("Implicit Euler solver", EulerLorentzImplicitSolver()))
+    val solversNames: Array<String> = Array(solvers.keySet().size(), { solvers.keySet().toList()[it] })
+
     val format = NumberFormat.getNumberInstance(Locale.getDefault())
     val rInput = JFormattedTextField(format)
     val x0Input = JFormattedTextField(format)
@@ -35,6 +40,7 @@ class Demo() {
     val z0Input = JFormattedTextField(format)
     val dtInput = JFormattedTextField(format)
     val btnApply = JButton("Apply")
+    val comboSolver = JComboBox(solversNames)
 
     init {
         rInput.setValue(defaultR)
@@ -57,6 +63,9 @@ class Demo() {
             input.addActionListener { apply() }
         }
         btnApply.addActionListener { apply() }
+
+        comboSolver.setSelectedIndex(0)
+        comboSolver.addActionListener { apply() }
     }
 
     val controls = panel {
@@ -82,6 +91,9 @@ class Demo() {
         add(dtInput)
         add(Box.createRigidArea(Dimension(10, 10)))
 
+        add(comboSolver)
+        add(Box.createRigidArea(Dimension(10, 10)))
+
         add(btnApply)
 
         setPreferredSize(Dimension(300, 24))
@@ -101,8 +113,8 @@ class Demo() {
     }
 
     val window = frame("Main") {
-        minimumWidth = 600
-        minimumHeight = 500
+        minimumWidth = 650
+        minimumHeight = 550
 
         add(panel {
             setLayout(BorderLayout())
@@ -123,9 +135,9 @@ class Demo() {
         apply()
     }
 
-    var currentSolver = EulerExplicitSolver(defaultDt, defaultMaxT)
-
     fun apply() {
+        val solver = solvers[comboSolver.getSelectedItem()]!!
+
         val r = (rInput.getValue() as Number).toDouble()
         val x0 = (x0Input.getValue() as Number).toDouble()
         val y0 = (y0Input.getValue() as Number).toDouble()
@@ -133,7 +145,7 @@ class Demo() {
         val dt = (dtInput.getValue() as Number).toDouble()
 
         val system = LorentzEquationsSystem(defaultSigma, defaultB, r, x0, y0, z0)
-        val solution = currentSolver.solve(system)
+        val solution = solver.solve(system, dt, defaultMaxT)
         val (xs, ys, zs) = coordsFromSolution(solution, dt, defaultMaxT)
 
         if (listOf(xs, ys, zs) any { it any { x -> !java.lang.Double.isFinite(x) } }) {
