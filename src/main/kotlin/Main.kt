@@ -30,7 +30,8 @@ class Demo() {
     val defaultMaxT = 75.0
 
     val solvers = mapOf(Pair("Explicit Euler solver", EulerExplicitSolver()),
-                        Pair("Implicit Euler solver", EulerLorentzImplicitSolver()))
+                        Pair("Implicit Euler solver", EulerLorentzImplicitSolver()),
+                        Pair("RK4 solver", RK4Solver()))
     val solversNames: Array<String> = Array(solvers.keySet().size(), { solvers.keySet().toList()[it] })
 
     val format = NumberFormat.getNumberInstance(Locale.getDefault())

@@ -50,7 +50,7 @@ class EulerLorentzImplicitSolver() : Solver {
                     si * si * (y0 * y0 + 2 * z0 * (1 + z0)) + si * (2 * z0 * (1 + z0) + x0 * (y0 - y0 * z0)))) /
                     ((1 + b * dt) * ((1 + dt * (1 + si) + dt * dt * si * (1 - r + z0)) pow 2))
 
-            //the above is the solution by Wolfram Mathematica
+            //the above is the analytic solution by Wolfram Mathematica
 
             nodesY[0] add x1
             nodesY[1] add y1
@@ -66,6 +66,4 @@ class EulerLorentzImplicitSolver() : Solver {
     }
 
     fun Double.pow(i: Int) = Math.pow(this, i.toDouble())
-
-
 }
