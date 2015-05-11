@@ -23,9 +23,3 @@ public class PiecewiseLinear(private val points: Array<Point>) {
     val domain: Range<Double>
         get() = DoubleRange(points.first().x, points.last().x)
 }
-
-public class VectorFun(vararg private val funs: (Double) -> Double) {
-    fun invoke(x: List<Double>): List<Double> {
-        return x mapIndexed {i, x -> funs[i](x)}
-    }
-}

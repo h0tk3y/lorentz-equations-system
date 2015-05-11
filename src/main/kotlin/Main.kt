@@ -20,9 +20,9 @@ import kotlin.swing.*
 class Demo() {
 
     val defaultR = 28.0
-    val defaultX0 = 3.0
-    val defaultY0 = 3.0
-    val defaultZ0 = 3.0
+    val defaultX0 = 10.0
+    val defaultY0 = 10.0
+    val defaultZ0 = 10.0
 
     val defaultSigma = 10.0
     val defaultB = 8.0 / 3
@@ -41,6 +41,7 @@ class Demo() {
     val y0Input = JFormattedTextField(format)
     val z0Input = JFormattedTextField(format)
     val dtInput = JFormattedTextField(format)
+    val maxTInput = JFormattedTextField(format)
     val btnApply = JButton("Apply")
     val comboSolver = JComboBox(solversNames)
     val cbLine = JCheckBox("Lines")
@@ -51,8 +52,9 @@ class Demo() {
         y0Input.setValue(defaultY0)
         z0Input.setValue(defaultZ0)
         dtInput.setValue(defaultDt)
+        maxTInput.setValue(defaultMaxT)
 
-        val inputs = listOf(rInput, x0Input, y0Input, z0Input, dtInput)
+        val inputs = listOf(rInput, x0Input, y0Input, z0Input, dtInput, maxTInput)
         inputs forEach { input ->
             input.addFocusListener(object : FocusListener {
                 override fun focusLost(e: FocusEvent) {}
@@ -95,6 +97,10 @@ class Demo() {
         add(dtInput)
         add(Box.createRigidArea(Dimension(10, 10)))
 
+        add(JLabel("tMax = "))
+        add(maxTInput)
+        add(Box.createRigidArea(Dimension(10, 10)))
+
         add(comboSolver)
         add(Box.createRigidArea(Dimension(10, 10)))
 
@@ -117,7 +123,7 @@ class Demo() {
         plot3d.setPreferredSize(Dimension(500, 400))
     }
 
-    val window = frame("Main") {
+    val window = frame("Lorentz equations system") {
         minimumWidth = 650
         minimumHeight = 550
 
@@ -148,10 +154,11 @@ class Demo() {
         val y0 = (y0Input.getValue() as Number).toDouble()
         val z0 = (z0Input.getValue() as Number).toDouble()
         val dt = (dtInput.getValue() as Number).toDouble()
+        val maxT = (maxTInput.getValue() as Number).toDouble()
 
         val system = LorentzEquationsSystem(defaultSigma, defaultB, r, x0, y0, z0)
-        val solution = solver.solve(system, dt, defaultMaxT)
-        val (xs, ys, zs) = coordinatesFromSolution(solution, dt, defaultMaxT)
+        val solution = solver.solve(system, dt, maxT)
+        val (xs, ys, zs) = coordinatesFromSolution(solution, dt, maxT)
 
         if (listOf(xs, ys, zs) any { it any { x -> !java.lang.Double.isFinite(x) } }) {
             JOptionPane.showMessageDialog(window, "Calculated data is not finite, aborting");
@@ -196,7 +203,7 @@ class Demo() {
 
     companion object {
         platformStatic fun main(args: Array<String>) {
-            //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             Demo().start()
         }
     }

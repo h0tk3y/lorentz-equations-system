@@ -1,20 +1,24 @@
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'application'
 
 sourceCompatibility = 1.5
 version = '1.0'
+
+mainClassName = "Demo"
 
 repositories {
     mavenCentral()
 
     flatDir {
-        dirs 'libs'
+        dirs 'lib'
     }
 }
 
 dependencies {
     compile 'org.jetbrains.kotlin:kotlin-swing:0.11.91.4'
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile name: 'jmathplot'
 }
 
 buildscript {
