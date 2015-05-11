@@ -32,7 +32,7 @@ class Demo() {
     val defaultMaxT = 75.0
 
     val solvers = mapOf(Pair("Explicit Euler solver", EulerExplicitSolver()),
-                        Pair("Implicit Euler solver", EulerLorentzImplicitSolver()),
+                        Pair("Implicit Euler solver", EulerLorenzImplicitSolver()),
                         Pair("RK4 solver", RK4Solver()),
                         Pair("Adams predict-correct solver", AdamsPredictCorrectSolver()))
     val solversNames: Array<String> = Array(solvers.keySet().size(), { solvers.keySet().toList()[it] })
@@ -126,7 +126,7 @@ class Demo() {
         plot3d.setPreferredSize(Dimension(500, 400))
     }
 
-    val window = frame("Lorentz equations system") {
+    val window = frame("Lorenz equations system") {
         minimumWidth = 750
         minimumHeight = 650
 
@@ -169,7 +169,7 @@ class Demo() {
         val dt = (dtInput.getValue() as Number).toDouble()
         val maxT = (maxTInput.getValue() as Number).toDouble()
 
-        val system = LorentzEquationsSystem(defaultSigma, defaultB, r, x0, y0, z0)
+        val system = LorenzEquationsSystem(defaultSigma, defaultB, r, x0, y0, z0)
         val solution = solver.solve(system, dt, maxT)
         val (xs, ys, zs) = coordinatesFromSolution(solution, dt, maxT)
 

@@ -26,10 +26,10 @@ class EulerExplicitSolver() : Solver {
 
 }
 
-class EulerLorentzImplicitSolver() : Solver {
+class EulerLorenzImplicitSolver() : Solver {
     override fun solve(system: EquationsSystem, dt: Double, maxT: Double): List<(Double) -> Double> {
-        if (system !is LorentzEquationsSystem)
-            throw IllegalArgumentException("This solver can only solve Lorentz systems")
+        if (system !is LorenzEquationsSystem)
+            throw IllegalArgumentException("This solver can only solve Lorenz systems")
 
         val si = system.sigma
         val r = system.r

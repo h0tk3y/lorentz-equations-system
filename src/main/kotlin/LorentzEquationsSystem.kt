@@ -2,7 +2,7 @@
  * Created by Sergey on 09.05.2015.
  */
 
-public class LorentzEquationsSystem(val sigma: Double, val b: Double, val r: Double,
+public class LorenzEquationsSystem(val sigma: Double, val b: Double, val r: Double,
                                     val x0: Double, y0: Double, z0: Double)
 : EquationsSystem {
 
