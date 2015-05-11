@@ -5,6 +5,8 @@ import org.math.plot.render.AbstractDrawer
 import java.awt.*
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
+import java.awt.event.KeyEvent
+import java.awt.event.KeyListener
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Arrays
@@ -76,6 +78,7 @@ class Demo() {
 
     val controls = panel {
         setLayout(BoxLayout(this, BoxLayout.LINE_AXIS))
+        add(Box.createRigidArea(Dimension(10, 10)))
 
         add(JLabel("r = "))
         add(rInput)
@@ -124,8 +127,8 @@ class Demo() {
     }
 
     val window = frame("Lorentz equations system") {
-        minimumWidth = 650
-        minimumHeight = 550
+        minimumWidth = 750
+        minimumHeight = 650
 
         add(panel {
             setLayout(BorderLayout())
@@ -144,6 +147,16 @@ class Demo() {
     fun start() {
         window.setVisible(true)
         apply()
+
+        KeyboardFocusManager.getCurrentKeyboardFocusManager()
+                .addKeyEventDispatcher(object : KeyEventDispatcher {
+
+                    override fun dispatchKeyEvent(e: KeyEvent) = when(e.getKeyCode()) {
+                        100 -> { plot3d.rotate(-0.05, 0.0); true }
+                        102 -> { plot3d.rotate(0.05, 0.0); true }
+                        else -> false
+                    }
+                });
     }
 
     fun apply() {
