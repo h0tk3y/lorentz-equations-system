@@ -43,6 +43,7 @@ class Demo() {
     val dtInput = JFormattedTextField(format)
     val btnApply = JButton("Apply")
     val comboSolver = JComboBox(solversNames)
+    val cbLine = JCheckBox("Lines")
 
     init {
         rInput.setValue(defaultR)
@@ -68,6 +69,7 @@ class Demo() {
 
         comboSolver.setSelectedIndex(0)
         comboSolver.addActionListener { apply() }
+        cbLine.addActionListener { apply() }
     }
 
     val controls = panel {
@@ -108,6 +110,7 @@ class Demo() {
     init {
         plot2d.setAxisLabel(0, "t")
         plot2d.setAxisLabel(1, "f(t)")
+        plot3d.plotToolBar.add(cbLine)
     }
 
     init {
@@ -157,7 +160,11 @@ class Demo() {
 
         SwingUtilities.invokeLater {
             plot3d.removeAllPlots()
-            plot3d.addScatterPlot("Phase space", xs, ys, zs)
+            if (cbLine.isSelected()) {
+                plot3d.addLinePlot("Phase space", xs, ys, zs)
+            } else {
+                plot3d.addScatterPlot("Phase space", xs, ys, zs)
+            }
 
             val ts = DoubleArray(xs.size())
             for (i in xs.indices)
