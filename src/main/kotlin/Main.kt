@@ -31,7 +31,8 @@ class Demo() {
 
     val solvers = mapOf(Pair("Explicit Euler solver", EulerExplicitSolver()),
                         Pair("Implicit Euler solver", EulerLorentzImplicitSolver()),
-                        Pair("RK4 solver", RK4Solver()))
+                        Pair("RK4 solver", RK4Solver()),
+                        Pair("Adams predict-correct solver", AdamsPredictCorrectSolver()))
     val solversNames: Array<String> = Array(solvers.keySet().size(), { solvers.keySet().toList()[it] })
 
     val format = NumberFormat.getNumberInstance(Locale.getDefault())
@@ -147,7 +148,7 @@ class Demo() {
 
         val system = LorentzEquationsSystem(defaultSigma, defaultB, r, x0, y0, z0)
         val solution = solver.solve(system, dt, defaultMaxT)
-        val (xs, ys, zs) = coordsFromSolution(solution, dt, defaultMaxT)
+        val (xs, ys, zs) = coordinatesFromSolution(solution, dt, defaultMaxT)
 
         if (listOf(xs, ys, zs) any { it any { x -> !java.lang.Double.isFinite(x) } }) {
             JOptionPane.showMessageDialog(window, "Calculated data is not finite, aborting");
@@ -169,29 +170,21 @@ class Demo() {
         }
     }
 
-    data class CoordsArray(val xs: DoubleArray, val ys: DoubleArray, val zs: DoubleArray)
+    data class CoordinatesArray(val xs: DoubleArray, val ys: DoubleArray, val zs: DoubleArray)
 
-    fun coordsFromSolution(s: List<(Double) -> Double>, dt: Double, maxT: Double): CoordsArray {
-        val xs = arrayListOf<Double>()
-        val ys = arrayListOf<Double>()
-        val zs = arrayListOf<Double>()
+    fun coordinatesFromSolution(s: List<(Double) -> Double>, dt: Double, maxT: Double): CoordinatesArray {
+        val n = Math.ceil(maxT / dt).toInt()
+        val xs = DoubleArray(n)
+        val ys = DoubleArray(n)
+        val zs = DoubleArray(n)
 
-        for (t in 0.0..maxT step dt) {
-            xs add s[0](t)
-            ys add s[1](t)
-            zs add s[2](t)
+        for (i in 0..n-1) {
+            xs[i] = s[0](i * dt)
+            ys[i] = s[1](i * dt)
+            zs[i] = s[2](i * dt)
         }
 
-        val xss = DoubleArray(xs.size())
-        val yss = DoubleArray(ys.size())
-        val zss = DoubleArray(zs.size())
-        for (i in xs.indices) {
-            xss[i] = xs[i]
-            yss[i] = ys[i]
-            zss[i] = zs[i]
-        }
-
-        return CoordsArray(xss, yss, zss)
+        return CoordinatesArray(xs, ys, zs)
     }
 
     companion object {
